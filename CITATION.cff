@@ -1,0 +1,74 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "Cyclostationary Forecasting MATLAB — BLEND & CLIPER Operators"
+abstract: "MATLAB implementation of analytical training-free forecasting operators 
+  for cyclostationary processes. The BLEND and CLIPER operator families optimally 
+  combine simple and cyclic persistence through a closed-form coefficient derived 
+  from MSE minimization under periodic non-stationarity. Applied to solar irradiance, 
+  wind speed and electrical load forecasting."
+authors:
+  - family-names: Voyant
+    given-names: Cyril
+    affiliation: "Mines Paris – PSL University, Centre for Observation, Impacts, Energy (O.I.E.)"
+    country: FR
+    email: cyril.voyant@minesparis.psl.eu
+    orcid: "https://orcid.org/0000-0002-2810-162X"
+  - family-names: Banes
+    given-names: Candice
+    affiliation: "Mines Paris – PSL University, Centre for Observation, Impacts, Energy (O.I.E.)"
+    country: FR
+  - family-names: Garcia-Gutierrez
+    given-names: Luis
+    affiliation: "SPE Laboratory, UMR CNRS 6134, University of Corsica Pasquale Paoli"
+    country: FR
+  - family-names: Notton
+    given-names: Gilles
+    affiliation: "SPE Laboratory, UMR CNRS 6134, University of Corsica Pasquale Paoli"
+    country: FR
+  - family-names: Despotovic
+    given-names: Milan
+    affiliation: "Faculty of Engineering, University of Kragujevac"
+    country: RS
+  - family-names: Yaseen
+    given-names: Zaher Mundher
+    affiliation: "King Fahd University of Petroleum and Minerals"
+    country: SA
+version: 1.0.0
+date-released: "2025-01-01"
+license: MIT
+repository-code: "https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab"
+url: "https://arxiv.org/abs/2602.18949"
+keywords:
+  - cyclostationary
+  - persistence forecasting
+  - solar irradiance
+  - wind speed
+  - electrical load
+  - renewable energy
+  - BLEND operator
+  - CLIPER operator
+  - time series
+  - MATLAB
+  - analytical forecasting
+  - periodic non-stationarity
+  - energy forecasting
+preferred-citation:
+  type: article
+  title: "Symmetry-Constrained Forecasting of Periodically Correlated Energy Processes"
+  authors:
+    - family-names: Voyant
+      given-names: Cyril
+    - family-names: Banes
+      given-names: Candice
+    - family-names: Garcia-Gutierrez
+      given-names: Luis
+    - family-names: Notton
+      given-names: Gilles
+    - family-names: Despotovic
+      given-names: Milan
+    - family-names: Yaseen
+      given-names: Zaher Mundher
+  journal: "Applied Mathematical Modelling"
+  year: 2025
+  url: "https://arxiv.org/abs/2602.18949"

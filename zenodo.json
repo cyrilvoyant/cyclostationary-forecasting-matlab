@@ -1,0 +1,66 @@
+{
+  "title": "Cyclostationary Forecasting MATLAB — BLEND & CLIPER Operators",
+  "description": "MATLAB implementation of analytical training-free forecasting operators for cyclostationary processes. The BLEND and CLIPER operator families optimally combine simple and cyclic persistence through a closed-form coefficient derived from MSE minimization under periodic non-stationarity. Companion code for the peer-reviewed publication 'Symmetry-Constrained Forecasting of Periodically Correlated Energy Processes' published in Applied Mathematical Modelling.",
+  "version": "1.0.0",
+  "license": "MIT",
+  "upload_type": "software",
+  "access_right": "open",
+  "creators": [
+    {
+      "name": "Voyant, Cyril",
+      "affiliation": "Mines Paris – PSL University, Centre for Observation, Impacts, Energy (O.I.E.)",
+      "orcid": "0000-0002-2810-162X"
+    },
+    {
+      "name": "Banes, Candice",
+      "affiliation": "Mines Paris – PSL University, Centre for Observation, Impacts, Energy (O.I.E.)"
+    },
+    {
+      "name": "Garcia-Gutierrez, Luis",
+      "affiliation": "SPE Laboratory, UMR CNRS 6134, University of Corsica Pasquale Paoli"
+    },
+    {
+      "name": "Notton, Gilles",
+      "affiliation": "SPE Laboratory, UMR CNRS 6134, University of Corsica Pasquale Paoli"
+    },
+    {
+      "name": "Despotovic, Milan",
+      "affiliation": "Faculty of Engineering, University of Kragujevac"
+    },
+    {
+      "name": "Yaseen, Zaher Mundher",
+      "affiliation": "King Fahd University of Petroleum and Minerals"
+    }
+  ],
+  "keywords": [
+    "cyclostationary",
+    "persistence forecasting",
+    "solar irradiance",
+    "wind speed",
+    "electrical load",
+    "renewable energy",
+    "BLEND operator",
+    "CLIPER operator",
+    "time series",
+    "MATLAB",
+    "analytical forecasting",
+    "periodic non-stationarity",
+    "energy forecasting"
+  ],
+  "related_identifiers": [
+    {
+      "scheme": "url",
+      "identifier": "https://arxiv.org/abs/2602.18949",
+      "relation": "isSupplementTo",
+      "resource_type": "publication-article"
+    },
+    {
+      "scheme": "url",
+      "identifier": "https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab",
+      "relation": "isIdenticalTo",
+      "resource_type": "software"
+    }
+  ],
+  "journal_title": "Applied Mathematical Modelling",
+  "notes": "This software implements the forecasting operators described in the companion paper. The SIAR empirical dataset used for validation in the paper is not included due to data provider restrictions (FAIR principles). The synthetic data generation script (Algorithm 1 from the paper) is fully provided for reproducibility."
+}

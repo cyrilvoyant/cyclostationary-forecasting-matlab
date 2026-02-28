@@ -1,0 +1,118 @@
+{
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+  "@type": "SoftwareSourceCode",
+  "name": "Cyclostationary Forecasting MATLAB — BLEND & CLIPER Operators",
+  "description": "MATLAB implementation of analytical training-free forecasting operators for cyclostationary processes. The BLEND and CLIPER operator families optimally combine simple and cyclic persistence through a closed-form coefficient derived from MSE minimization under periodic non-stationarity. Applied to solar irradiance, wind speed and electrical load forecasting.",
+  "version": "1.0.0",
+  "dateCreated": "2025-01-01",
+  "datePublished": "2025-01-01",
+  "license": "https://spdx.org/licenses/MIT",
+  "url": "https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab",
+  "codeRepository": "https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab",
+  "relatedLink": "https://arxiv.org/abs/2602.18949",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "MATLAB"
+  },
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Cyril",
+      "familyName": "Voyant",
+      "email": "cyril.voyant@minesparis.psl.eu",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "Mines Paris – PSL University, Centre for Observation, Impacts, Energy (O.I.E.)"
+      }
+    },
+    {
+      "@type": "Person",
+      "givenName": "Candice",
+      "familyName": "Banes",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "Mines Paris – PSL University, Centre for Observation, Impacts, Energy (O.I.E.)"
+      }
+    },
+    {
+      "@type": "Person",
+      "givenName": "Luis",
+      "familyName": "Garcia-Gutierrez",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "SPE Laboratory, UMR CNRS 6134, University of Corsica Pasquale Paoli"
+      }
+    },
+    {
+      "@type": "Person",
+      "givenName": "Gilles",
+      "familyName": "Notton",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "SPE Laboratory, UMR CNRS 6134, University of Corsica Pasquale Paoli"
+      }
+    },
+    {
+      "@type": "Person",
+      "givenName": "Milan",
+      "familyName": "Despotovic",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "Faculty of Engineering, University of Kragujevac"
+      }
+    },
+    {
+      "@type": "Person",
+      "givenName": "Zaher Mundher",
+      "familyName": "Yaseen",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "King Fahd University of Petroleum and Minerals"
+      }
+    }
+  ],
+  "keywords": [
+    "cyclostationary",
+    "persistence forecasting",
+    "solar irradiance",
+    "wind speed",
+    "electrical load",
+    "renewable energy",
+    "BLEND operator",
+    "CLIPER operator",
+    "time series",
+    "MATLAB",
+    "analytical forecasting",
+    "periodic non-stationarity",
+    "energy forecasting",
+    "symmetry",
+    "covariance"
+  ],
+  "applicationCategory": "Scientific Software",
+  "operatingSystem": [
+    "Windows",
+    "macOS",
+    "Linux"
+  ],
+  "softwareRequirements": [
+    "MATLAB R2021a or later",
+    "Statistics and Machine Learning Toolbox",
+    "Signal Processing Toolbox",
+    "Curve Fitting Toolbox"
+  ],
+  "referencePublication": {
+    "@type": "ScholarlyArticle",
+    "name": "Symmetry-Constrained Forecasting of Periodically Correlated Energy Processes",
+    "author": [
+      "Cyril Voyant",
+      "Candice Banes",
+      "Luis Garcia-Gutierrez",
+      "Gilles Notton",
+      "Milan Despotovic",
+      "Zaher Mundher Yaseen"
+    ],
+    "journal": "Applied Mathematical Modelling",
+    "url": "https://arxiv.org/abs/2602.18949",
+    "datePublished": "2025"
+  }
+}
