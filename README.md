@@ -220,7 +220,7 @@ You are free to use, modify, and distribute this code for academic and commercia
 - 📄 [arXiv preprint](https://arxiv.org/abs/2602.18949)
 - 🌐 [SIAR data portal](https://observatorioregadio.gob.es/fr/outils/siar/)
 - 🏛️ [SPE Laboratory — University of Corsica](https://spe.universita.corsica/)
-- 🏛️ [Centre OIE — Mines Paris PSL](https://www.minesparis.psl.eu/recherche/centres-de-recherche/oie/)
+- 🏛️ [Centre OIE — Mines Paris PSL](https://www.oie.minesparis.psl.eu/Accueil/)
 
 ---
 
