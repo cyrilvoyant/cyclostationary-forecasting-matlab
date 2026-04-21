@@ -1,4 +1,5 @@
 # Cyclostationary Forecasting — BLEND & CLIPER Operators (MATLAB)
+🔗 **Project page:** [https://www.cyrilvoyant.com/...](https://www.cyrilvoyant.com/latest-publications-and-news)
 
 > **Training-free analytical forecasting for periodic energy time series**  
 > Companion code for the peer-reviewed publication in *Applied Mathematical Modelling*
