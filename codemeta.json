@@ -20,6 +20,7 @@
       "givenName": "Cyril",
       "familyName": "Voyant",
       "email": "cyril.voyant@minesparis.psl.eu",
+      "url": "https://person.cyrilvoyant.com",
       "affiliation": {
         "@type": "Organization",
         "name": "Mines Paris – PSL University, Centre for Observation, Impacts, Energy (O.I.E.)"
