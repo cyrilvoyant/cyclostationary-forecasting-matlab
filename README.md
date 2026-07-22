@@ -1,8 +1,8 @@
 # Cyclostationary Forecasting — BLEND & CLIPER Operators (MATLAB)
 🔗 **Project page:** [https://www.cyrilvoyant.com/...](https://www.cyrilvoyant.com/latest-publications-and-news)
 
-> **Training-free analytical forecasting for periodic energy time series**  
-> Companion code for the peer-reviewed publication in *Applied Mathematical Modelling*
+> **A new, frugal persistence operator that exploits the cyclostationarity of energy processes**  
+> Training-free, closed-form, MSE-optimal — companion code for the peer-reviewed publication in *Applied Mathematical Modelling*
 
 [![MATLAB](https://img.shields.io/badge/MATLAB-R2021a%2B-blue.svg)](https://www.mathworks.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -15,7 +15,7 @@
 
 **Symmetry-Constrained Forecasting of Periodically Correlated Energy Processes**  
 *Cyril Voyant, Candice Banes, Luis Garcia-Gutierrez, Gilles Notton, Milan Despotovic, Zaher Mundher Yaseen*  
-Applied Mathematical Modelling — 2025
+Applied Mathematical Modelling — 2026
 
 🔗 **[Read the paper on arXiv](https://arxiv.org/abs/2602.18949)**
 
@@ -25,7 +25,7 @@ Applied Mathematical Modelling — 2025
 
 Time series from energy systems — **solar irradiance**, **wind speed**, **electrical load** — exhibit strong diurnal and seasonal periodicities. Classical persistence models assume stationarity and rapidly lose accuracy beyond intra-hour horizons.
 
-This repository implements a family of **analytical, training-free forecasting operators** designed for **cyclostationary processes**, where statistical moments (mean, variance, covariance) evolve periodically. The key contribution is the **BLEND operator family**, which optimally combines:
+**This is not another forecasting model bolted onto persistence — it is a new persistence operator in its own right.** Instead of adding external inputs, training, or a physical model, it exploits a structural property already present in the signal: its **cyclostationarity** (the fact that mean, variance, and covariance repeat periodically rather than staying constant). By conditioning persistence on the phase of the cycle, the operator stays exactly as **frugal** as classical persistence — no training, no external data, no fitted parameters — while recovering most of the accuracy of far more expensive models. This repository implements this family of **analytical, training-free forecasting operators** for **cyclostationary processes**. The key contribution is the **BLEND operator family**, which optimally combines:
 
 - **Simple Persistence** `P` — current observation as forecast
 - **Cyclic Persistence** `P⟲` — phase-aligned observation from the previous cycle
@@ -196,12 +196,12 @@ On SIAR empirical solar irradiance data:
 If you use this code in your research, please cite:
 
 ```bibtex
-@article{voyant2025cyclostationary,
+@article{voyant2026cyclostationary,
   title   = {Symmetry-Constrained Forecasting of Periodically Correlated Energy Processes},
   author  = {Voyant, Cyril and Banes, Candice and Garcia-Gutierrez, Luis and 
              Notton, Gilles and Despotovic, Milan and Yaseen, Zaher Mundher},
   journal = {Applied Mathematical Modelling},
-  year    = {2025},
+  year    = {2026},
   url     = {https://arxiv.org/abs/2602.18949}
 }
 ```
@@ -225,4 +225,4 @@ You are free to use, modify, and distribute this code for academic and commercia
 
 ---
 
-*Keywords: cyclostationary, persistence forecasting, solar irradiance, wind speed, electrical load, time series, renewable energy, BLEND operator, CLIPER, periodic autoregressive, MATLAB, analytical forecasting, symmetry, covariance preservation*
+*Keywords: cyclostationary, frugal forecasting, persistence forecasting, new persistence operator, solar irradiance, wind speed, electrical load, time series, renewable energy, BLEND operator, CLIPER, periodic autoregressive, MATLAB, analytical forecasting, training-free, symmetry, covariance preservation*

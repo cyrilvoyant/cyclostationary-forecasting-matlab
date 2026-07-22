@@ -35,12 +35,13 @@ authors:
     affiliation: "King Fahd University of Petroleum and Minerals"
     country: SA
 version: 1.0.0
-date-released: "2025-01-01"
+date-released: "2026-02-21"
 license: MIT
 repository-code: "https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab"
 url: "https://arxiv.org/abs/2602.18949"
 keywords:
   - cyclostationary
+  - frugal forecasting
   - persistence forecasting
   - solar irradiance
   - wind speed
@@ -70,5 +71,5 @@ preferred-citation:
     - family-names: Yaseen
       given-names: Zaher Mundher
   journal: "Applied Mathematical Modelling"
-  year: 2025
+  year: 2026
   url: "https://arxiv.org/abs/2602.18949"
