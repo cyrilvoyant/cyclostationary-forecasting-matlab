@@ -23,7 +23,9 @@
       "url": "https://person.cyrilvoyant.com",
       "affiliation": {
         "@type": "Organization",
-        "name": "Mines Paris – PSL University, Centre for Observation, Impacts, Energy (O.I.E.)"
+        "name": "Mines Paris – PSL University, Centre for Observation, Impacts, Energy (O.I.E.)",
+        "@id": "https://ror.org/04y8cs423",
+        "identifier": "https://ror.org/04y8cs423"
       },
       "@id": "https://orcid.org/0000-0003-0242-7377"
     },
@@ -33,7 +35,9 @@
       "familyName": "Banes",
       "affiliation": {
         "@type": "Organization",
-        "name": "Mines Paris – PSL University, Centre for Observation, Impacts, Energy (O.I.E.)"
+        "name": "Mines Paris – PSL University, Centre for Observation, Impacts, Energy (O.I.E.)",
+        "@id": "https://ror.org/04y8cs423",
+        "identifier": "https://ror.org/04y8cs423"
       }
     },
     {
@@ -42,7 +46,9 @@
       "familyName": "Garcia-Gutierrez",
       "affiliation": {
         "@type": "Organization",
-        "name": "SPE Laboratory, UMR CNRS 6134, University of Corsica Pasquale Paoli"
+        "name": "SPE Laboratory, UMR CNRS 6134, University of Corsica Pasquale Paoli",
+        "@id": "https://ror.org/050ra0n32",
+        "identifier": "https://ror.org/050ra0n32"
       }
     },
     {
@@ -51,7 +57,9 @@
       "familyName": "Notton",
       "affiliation": {
         "@type": "Organization",
-        "name": "SPE Laboratory, UMR CNRS 6134, University of Corsica Pasquale Paoli"
+        "name": "SPE Laboratory, UMR CNRS 6134, University of Corsica Pasquale Paoli",
+        "@id": "https://ror.org/050ra0n32",
+        "identifier": "https://ror.org/050ra0n32"
       }
     },
     {
@@ -60,7 +68,9 @@
       "familyName": "Despotovic",
       "affiliation": {
         "@type": "Organization",
-        "name": "Faculty of Engineering, University of Kragujevac"
+        "name": "Faculty of Engineering, University of Kragujevac",
+        "@id": "https://ror.org/04f7vj627",
+        "identifier": "https://ror.org/04f7vj627"
       }
     },
     {
@@ -69,7 +79,9 @@
       "familyName": "Yaseen",
       "affiliation": {
         "@type": "Organization",
-        "name": "King Fahd University of Petroleum and Minerals"
+        "name": "King Fahd University of Petroleum and Minerals",
+        "@id": "https://ror.org/03yez3163",
+        "identifier": "https://ror.org/03yez3163"
       }
     }
   ],
