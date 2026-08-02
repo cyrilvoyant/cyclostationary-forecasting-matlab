@@ -1,4 +1,6 @@
 # Cyclostationary Forecasting — BLEND & CLIPER Operators (MATLAB)
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18812334.svg)](https://doi.org/10.5281/zenodo.18812334)
 🔗 **Project page:** [https://www.cyrilvoyant.com/...](https://www.cyrilvoyant.com/latest-publications-and-news)
 
 > **A new, frugal persistence operator that exploits the cyclostationarity of energy processes**  

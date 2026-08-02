@@ -74,3 +74,8 @@ preferred-citation:
   journal: "Applied Mathematical Modelling"
   year: 2026
   url: "https://arxiv.org/abs/2602.18949"
+
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.18812334"
+    description: "Concept DOI (all versions, Zenodo)"
