@@ -24,7 +24,8 @@
       "affiliation": {
         "@type": "Organization",
         "name": "Mines Paris – PSL University, Centre for Observation, Impacts, Energy (O.I.E.)"
-      }
+      },
+      "@id": "https://orcid.org/0000-0003-0242-7377"
     },
     {
       "@type": "Person",
@@ -116,5 +117,6 @@
     "journal": "Applied Mathematical Modelling",
     "url": "https://arxiv.org/abs/2602.18949",
     "datePublished": "2026"
-  }
+  },
+  "identifier": "https://doi.org/10.5281/zenodo.18812334"
 }
