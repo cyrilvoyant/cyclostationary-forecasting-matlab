@@ -1,5 +1,5 @@
 {
-  "@context": "https://doi.org/10.5281/zenodo.18812334",
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "name": "Cyclostationary Forecasting MATLAB — BLEND & CLIPER Operators",
   "description": "MATLAB implementation of analytical training-free forecasting operators for cyclostationary processes. The BLEND and CLIPER operator families optimally combine simple and cyclic persistence through a closed-form coefficient derived from MSE minimization under periodic non-stationarity. Applied to solar irradiance, wind speed and electrical load forecasting.",
@@ -131,5 +131,5 @@
     "url": "https://arxiv.org/abs/2602.18949",
     "datePublished": "2026"
   },
-  "identifier": "https://doi.org/10.5281/zenodo.18812334"
+  "identifier": "https://doi.org/10.5281/zenodo.18812333"
 }

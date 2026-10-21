@@ -1,6 +1,6 @@
 # Cyclostationary Forecasting — BLEND & CLIPER Operators (MATLAB)
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18812334.svg)](https://doi.org/10.5281/zenodo.18812334)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18812333.svg)](https://doi.org/10.5281/zenodo.18812333)
 [![SWH](https://archive.softwareheritage.org/badge/swh:1:dir:ffac5b7434f6ca87f99f246804225ed1d4d45954/)](https://archive.softwareheritage.org/swh:1:dir:ffac5b7434f6ca87f99f246804225ed1d4d45954;origin=https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab;visit=swh:1:snp:cdad432d0cc2081cc34205e770fb0ae778a8392a;anchor=swh:1:rev:1a1ad1ed2055f0b24693ba89f313e607315438be;path=/)
 🔗 **Project page:** [https://www.cyrilvoyant.com/...](https://www.cyrilvoyant.com/latest-publications-and-news)
 
