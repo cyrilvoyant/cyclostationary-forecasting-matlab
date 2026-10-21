@@ -1,5 +1,6 @@
 function predictions = predict_P_smart(noisy_signal, clear_sky_signal, n_delta_t)
-    % Smart Persistence Prediction using an additive adjustment
+    % Smart persistence, ADDITIVE form: x_hat(t + h) = x(t) + CS(t + h) - CS(t).
+    % The paper's Definition 3 is multiplicative (ratio x/CS): see predict_P_smart_mult.m.
     % Parameters:
     % - noisy_signal: Input signal (time series)
     % - clear_sky_signal: Clear-sky model signal (time series)

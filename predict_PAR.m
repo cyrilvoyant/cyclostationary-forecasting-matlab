@@ -1,50 +1,33 @@
-function predictions = predict_PAR(noisy_signal, T, n_delta_t, p)
-    % Periodic Autoregressive (PAR) Model Prediction
-    % Parameters:
-    % - noisy_signal: Input time series
-    % - T: Period of the signal
-    % - n_delta_t: Prediction horizon
-    % - p: Order of the AR model
-    %
-    % Output:
-    % - predictions: Predicted values
+function predictions = predict_PAR(noisy_signal, T, n_delta_t, p, n_train)
+    % Periodic AR(p) on the same phase of previous cycles:
+    %   x_hat(t) = sum_j a_j(phase) * x(t - j T),  j = 1..p,
+    % coefficients fitted per phase by least squares on noisy_signal(1:n_train) (default: whole signal).
+    % Causal for n_delta_t <= T: the inputs are at least one period old.
 
+    if nargin < 5, n_train = []; end
+    n_train = validate_inputs(noisy_signal, T, n_delta_t, n_train, true);
+    noisy_signal = noisy_signal(:);
     n_points = length(noisy_signal);
     predictions = zeros(n_points, 1);
-    ar_coefficients = zeros(T, p); % Coefficients for each phase
+    ar_coefficients = zeros(T, p);
 
-    % Estimate AR coefficients for each phase
     for phase = 1:T
-        indices = phase:T:n_points; % Indices for the current phase
+        indices = phase:T:n_train;
         if length(indices) > p
-            % Construct lagged matrix
             X = zeros(length(indices) - p, p);
             y = noisy_signal(indices(p+1:end));
             for lag = 1:p
                 X(:, lag) = noisy_signal(indices(p-lag+1:end-lag));
             end
-
-            % Estimate AR coefficients for this phase
             if rank(X) == p
                 ar_coefficients(phase, :) = (X \ y)';
-            else
-                warning('Rank deficient matrix for phase %d. Setting coefficients to zero.', phase);
-                ar_coefficients(phase, :) = zeros(1, p);
             end
-        else
-            warning('Not enough data for phase %d. Setting coefficients to zero.', phase);
-            ar_coefficients(phase, :) = zeros(1, p);
         end
     end
 
-    % Generate predictions
-    % Coefficients link each phase to the same phase 1..p cycles earlier: inputs x(t - T), ..., x(t - p*T) (causal for n_delta_t <= T)
     for t = p * T + 1:n_points
-        phase = mod(t - 1, T) + 1; % Determine the phase
-        lagged_values = noisy_signal(t - (1:p)' * T); % same phase, 1..p cycles earlier
-        predictions(t) = ar_coefficients(phase, :) * lagged_values;
+        phase = mod(t - 1, T) + 1;
+        predictions(t) = ar_coefficients(phase, :) * noisy_signal(t - (1:p)' * T);
     end
-
-    % Fill initial values with simple persistence as fallback
     predictions(1:p * T) = noisy_signal(max(1, (1:p * T)' - n_delta_t));
 end

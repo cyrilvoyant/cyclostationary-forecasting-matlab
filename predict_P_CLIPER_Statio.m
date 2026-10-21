@@ -1,41 +1,27 @@
-function predictions = predict_P_CLIPER_Statio(noisy_signal, n_delta_t)
-    % CLIPER Prediction
-    % Parameters:
-    % - noisy_signal: Input signal (time series)
-    % - n_delta_t: Prediction horizon (corresponds to lag h)
+function predictions = predict_P_CLIPER_Statio(noisy_signal, n_delta_t, n_train)
+    % predict_P_CLIPER_Statio
+    % Stationary CLIPER (paper, Definition 4): x_hat(t + h) = lambda * mu + (1 - lambda) * x(t),
+    % lambda = 1 - rho(h), with mu, variance and rho(h) estimated on noisy_signal(1:n_train)
+    % (default: whole signal).
 
-    % Compute mean and variance of the signal
-    mu = mean(noisy_signal);
-    sigma2 = var(noisy_signal);
-    
-    % Handle edge case where variance is zero
-    if sigma2 == 0
-        warning('Signal variance is zero, returning constant predictions.');
-        predictions = repmat(mu, length(noisy_signal), 1);
-        return;
-    end
-
-    % Compute covariance at lag n_delta_t
-    if length(noisy_signal) - n_delta_t < 2
-        error('Not enough data points to compute covariance for lag n_delta_t.');
-    end
-    C_h = cov(noisy_signal(1:end-n_delta_t), noisy_signal(1+n_delta_t:end));
-    C_h = C_h(1, 2);  % Extract the covariance value
-
-    % Compute correlation coefficient at lag n_delta_t
-    rho_h = C_h / sigma2;
-    lambda = (1 - rho_h);
-    lambda = max(0, min(1, lambda)); % Force lambda to stay in [0, 1]
-    
-    % Initialize predictions with mean fallback
+    noisy_signal = noisy_signal(:);
     n_points = length(noisy_signal);
-    predictions = zeros(n_points, 1);
-
-    % Generate predictions using the correct CLIPER formula
-    for t = n_delta_t + 1:n_points
-        predictions(t) = lambda * mu + (1 - lambda) * noisy_signal(t - n_delta_t);
+    if nargin < 3 || isempty(n_train), n_train = n_points; end
+    if n_delta_t ~= round(n_delta_t) || n_delta_t < 1 || n_train - n_delta_t < 2 || n_train > n_points
+        error('predict_P_CLIPER_Statio:input', 'Invalid n_delta_t or n_train.');
     end
+    s = noisy_signal(1:n_train);
+    mu = mean(s);
+    sigma2 = var(s);
+    if sigma2 > 0
+        C_h = cov(s(1:end - n_delta_t), s(1 + n_delta_t:end));
+        lambda = 1 - C_h(1, 2) / sigma2;
+    else
+        lambda = 1;
+    end
+    lambda = max(0, min(1, lambda));
 
-    % Fill initial values with mean as fallback
-    predictions(1:n_delta_t) = mu;
+    predictions = repmat(mu, n_points, 1);
+    t = (n_delta_t + 1:n_points)';
+    predictions(t) = lambda * mu + (1 - lambda) * noisy_signal(t - n_delta_t);
 end

@@ -1,37 +1,37 @@
-function [predictions, lambda_values] = predict_P_BLEND_LS(signal, T, n_delta_t)
+function [predictions, lambda_values] = predict_P_BLEND_LS(signal, T, n_delta_t, n_train)
     % predict_P_BLEND_LS
-    % Blend persistence with the cyclic weight fitted by least squares, one weight per phase:
-    %   x_hat(t + h) = lambda(phase of t) * x(t + h - T) + (1 - lambda(phase of t)) * x(t)
-    %   lambda = sum((y - r) .* (c - r)) / sum((c - r).^2), y = x(t+h), r = x(t), c = x(t+h-T)
-    % Closed form (1-D least squares), clipped to [0, 1]. Like the other cyclic operators,
-    % the weights are estimated on the whole series. Assumes 0 < n_delta_t <= T.
+    % BLEND with one least-squares weight per phase of the origin t:
+    %   x_hat(t + h) = (1 - lambda) * x(t + h - T) + lambda * x(t),
+    %   lambda = sum((y - c) .* (r - c)) / sum((r - c).^2), y = x(t+h), r = x(t), c = x(t+h-T),
+    % closed form (one-dimensional least squares), clipped to [0, 1]. The weights are fitted on the
+    % triplets whose target lies in signal(1:n_train) and then applied unchanged to every origin.
     %
-    % Paramètres :
-    % - signal : Signal d'entrée.
-    % - T : Période du processus cyclostationnaire.
-    % - n_delta_t : Horizon de prédiction.
-    %
-    % Résultats :
-    % - predictions : Prédictions (forecast of t + n_delta_t stored at t + n_delta_t).
-    % - lambda_values : Poids du terme cyclique pour chaque point.
+    % Parameters: signal, period T, horizon n_delta_t (1 <= h <= T),
+    %             n_train (fitting range; default: whole signal, i.e. an in-sample diagnostic).
+    % Outputs: forecast of t + h stored at t + h; lambda_values (weight of simple persistence).
 
+    if nargin < 4, n_train = []; end
+    n_train = validate_inputs(signal, T, n_delta_t, n_train, true);
     signal = signal(:);
     n_points = length(signal);
-    origins = (T + 1:n_points - n_delta_t)';
-    phases = mod(origins - 1, T) + 1;
-    y = signal(origins + n_delta_t); r = signal(origins); c = signal(origins + n_delta_t - T);
 
-    lambda_phase = ones(T, 1); % no information (zero denominator) -> cyclic term
+    fit = (T + 1:n_train - n_delta_t)';
+    phases_fit = mod(fit - 1, T) + 1;
+    y = signal(fit + n_delta_t); r = signal(fit); c = signal(fit + n_delta_t - T);
+    lambda_phase = zeros(T, 1); % no information (zero denominator) -> cyclic persistence
     for phase = 1:T
-        k = phases == phase;
-        den = sum((c(k) - r(k)).^2);
+        k = phases_fit == phase;
+        den = sum((r(k) - c(k)).^2);
         if den > 0
-            lambda_phase(phase) = max(0, min(1, sum((y(k) - r(k)) .* (c(k) - r(k))) / den));
+            lambda_phase(phase) = max(0, min(1, sum((y(k) - c(k)) .* (r(k) - c(k))) / den));
         end
     end
 
+    origins = (T + 1:n_points - n_delta_t)';
+    phases = mod(origins - 1, T) + 1;
     predictions = signal(max(1, (1:n_points)' - n_delta_t)); % simple persistence for the first values
     lambda_values = zeros(n_points, 1);
     lambda_values(origins + n_delta_t) = lambda_phase(phases);
-    predictions(origins + n_delta_t) = lambda_phase(phases) .* c + (1 - lambda_phase(phases)) .* r;
+    predictions(origins + n_delta_t) = (1 - lambda_phase(phases)) .* signal(origins + n_delta_t - T) ...
+        + lambda_phase(phases) .* signal(origins);
 end

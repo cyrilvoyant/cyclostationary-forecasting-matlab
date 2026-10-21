@@ -1,5 +1,6 @@
 function [predictions, theta] = predict_Theta(noisy_signal, T, n_delta_t)
-    % Theta Method Prediction
+    % Simple Theta-type benchmark (not a tuned standard Theta implementation): fixed theta,
+    % causal trailing moving-average trend, seasonal component taken from the first cycle.
     % Parameters:
     % - noisy_signal: Input signal (time series)
     % - T: Period of the signal

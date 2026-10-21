@@ -2,6 +2,7 @@
 clear;
 clc;
 close all;
+rng(1); % reproducible demo; the full out-of-sample benchmark is run_benchmark.m
 
 % Paramètres
 T = 24;         % Période
@@ -62,7 +63,7 @@ predictions_PAR = max(0, predictions_PAR);
 predictions_P_BLEND_LS = max(0, predictions_P_BLEND_LS);
 
 % Calculer nRMSE pour chaque modèle
-start_index = max([T+1, n_delta_t+1]);
+start_index = 2*T + n_delta_t + 1; % after every warm-up (in-sample diagnostic, see run_benchmark.m)
 nrmse = zeros(12, 1); % Pré-allocation pour stocker les nRMSE
 
 % Calculer la VALEUR MOYENNE du signal bruité sur la plage considérée

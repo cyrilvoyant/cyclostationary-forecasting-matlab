@@ -1,61 +1,28 @@
-function [predictions, lambda_values] = predict_P_BLEND_Tilde(signal, T, n_delta_t)
-    % predict_P_BLEND_Cyclo
-    % Prédictions Blend Persistence sous hypothèse cyclostationnaire.
+function [predictions, lambda_values] = predict_P_BLEND_Tilde(signal, T, n_delta_t, n_train)
+    % predict_P_BLEND_Tilde
+    % Simplified cyclostationary BLEND (paper, Definition 8), one weight per phase of the origin t:
+    %   x_hat(t + h) = (1 - lambda) * x(t + h - T) + lambda * x(t),  lambda = (1 + rho(t, h)) / 2.
+    % lambda -> 1 when rho -> 1 (simple persistence at short horizons). The closed form holds under the
+    % paper's assumptions (equal means and variances at t and t + h, negligible long-lag correlation).
+    % When rho is undefined (zero variance at the origin or target phase, or too few pairs),
+    % lambda = 0 is used: an operational choice, not part of Definition 8.
     %
-    % Paramètres :
-    % - signal : Signal d'entrée.
-    % - T : Période du processus cyclostationnaire.
-    % - n_delta_t : Horizon de prédiction (correspond au lag h).
-    %
-    % Résultats :
-    % - predictions : Prédictions générées.
-    % - lambda_values : Valeurs de lambda calculées pour chaque point.
+    % Parameters: signal, period T, horizon n_delta_t (1 <= h <= T),
+    %             n_train (statistics estimated on signal(1:n_train); default: whole signal).
+    % Outputs: forecast of t + h stored at t + h; lambda_values (weight of simple persistence).
 
+    if nargin < 4, n_train = []; end
+    signal = signal(:);
     n_points = length(signal);
-    predictions = zeros(1, n_points);   % Initialisation des prédictions
-    lambda_values = zeros(1, n_points); % Initialisation des lambdas
+    [~, ~, rho] = cyclic_parameters(signal, T, n_delta_t, n_train);
 
-    % Calcul des paramètres cycliques
-    [mu_t_values, sigma_t_values, rho_t_values, rho_t_h_minus_T_values, rho_t_plus_h_T_values] = cyclic_parameters(signal, T, n_delta_t);
-
-    % Boucle pour générer les prédictions
-    % Causal alignment: parameters at origin t, forecast of t + n_delta_t stored at t + n_delta_t
-    predictions(1:min(n_delta_t, n_points)) = signal(1:min(n_delta_t, n_points));
-    for t = 1:n_points - n_delta_t
-        % Déterminer les phases actuelles et futures
-        phase = mod(t - 1, T) + 1;
-        phase_h = mod(t + n_delta_t - 1, T) + 1;
-
-        % Extraire les paramètres cycliques
-        sigma_t = sigma_t_values(phase);
-        mu_t = mu_t_values(phase);
-        sigma_t_h = sigma_t_values(phase_h);
-        mu_t_h = mu_t_values(phase_h);
-        rho_t_h = rho_t_values(phase);
-        rho_t_h_minus_T = rho_t_h_minus_T_values(phase);
-        rho_t_plus_h_T = rho_t_plus_h_T_values(phase);
-
-        % Calcul de lambda simplifié
-        lambda = 0.5 * (1 + rho_t_h);
-
-        % Contrainte pour garder lambda entre [0, 1]
+    predictions = signal(max(1, (1:n_points)' - n_delta_t)); % simple persistence for the first values
+    lambda_values = zeros(n_points, 1);
+    for t = T + 1:n_points - n_delta_t
+        lambda = 0.5 * (1 + rho(mod(t - 1, T) + 1));
+        if isnan(lambda), lambda = 0; end % before clipping: min(1, NaN) is 1 in MATLAB
         lambda = max(0, min(1, lambda));
-
-        % Gestion des NaN (variance nulle à l'origine : pas d'information récente -> terme cyclique)
-        if isnan(lambda)
-            lambda = 1;
-        end
-
-        % Stocker la valeur de lambda
         lambda_values(t + n_delta_t) = lambda;
-
-        % Prédiction basée sur la combinaison Blend
-        if t + n_delta_t > T
-            % lambda weights the cyclic term (eq. 16)
-            predictions(t + n_delta_t) = lambda * signal(t + n_delta_t - T) + (1 - lambda) * signal(t);
-        else
-            % Fallback pour les premières valeurs
-            predictions(t + n_delta_t) = signal(t);
-        end
+        predictions(t + n_delta_t) = (1 - lambda) * signal(t + n_delta_t - T) + lambda * signal(t);
     end
 end

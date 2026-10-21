@@ -1,58 +1,43 @@
-function predictions = predict_HW(noisy_signal, T, n_delta_t)
-    % Holt-Winters Prediction with Stability Enhancements
-    % Parameters:
-    % - noisy_signal: Input signal (time series)
-    % - T: Period of the signal
-    % - n_delta_t: Prediction horizon
+function predictions = predict_HW(noisy_signal, T, n_delta_t, n_train)
+    % Holt-Winters (additive seasonality) with fixed smoothing constants, run causally:
+    % the state at t uses observations up to t only; forecast of t + h stored at t + h.
+    % Initial level, trend and seasonality from the first two cycles; the stability bound uses
+    % noisy_signal(1:n_train) only (default: whole signal). Constants are not tuned here.
 
-    % Initialization
+    if nargin < 4, n_train = []; end
+    n_train = validate_inputs(noisy_signal, T, n_delta_t, n_train, false);
+    noisy_signal = noisy_signal(:);
     n_points = length(noisy_signal);
-    level = mean(noisy_signal(1:T)); % Initial level
-    trend = (mean(noisy_signal(T+1:2*T)) - mean(noisy_signal(1:T))) / T; % Initial trend
-    seasonality = noisy_signal(1:T) - level; % Initial seasonality
-    
-    % Optimized smoothing parameters
-    alpha = 0.0837; % Level smoothing 0837
-    beta = 0.4657; % Trend smoothing
-    gamma = 0.00; % Seasonality smoothing
+    level = mean(noisy_signal(1:T));
+    trend = (mean(noisy_signal(T+1:2*T)) - mean(noisy_signal(1:T))) / T;
+    seasonality = noisy_signal(1:T) - level;
+    bound = 5 * max(abs(noisy_signal(1:n_train)));
 
-    % Preallocate arrays
+    alpha = 0.0837; % level smoothing
+    beta = 0.4657;  % trend smoothing
+    gamma = 0.00;   % seasonality smoothing
+
     levels = zeros(n_points, 1);
     trends = zeros(n_points, 1);
-    seasonals = zeros(T, 1); % Periodic seasonality
+    seasonals = seasonality;
     predictions = zeros(n_points, 1);
+    levels(T) = level; % the recursion starts at t = T + 1 and reads levels(T), trends(T)
+    trends(T) = trend;
 
-    % Initial values
-    levels(1) = level;
-    trends(1) = trend;
-    seasonals(1:T) = seasonality;
-
-    % Recursive computation
     for t = T+1:n_points - n_delta_t
-        % Update level
         levels(t) = alpha * (noisy_signal(t) - seasonals(mod(t-1, T) + 1)) + ...
                     (1 - alpha) * (levels(t-1) + trends(t-1));
-        
-        % Update trend
         trends(t) = beta * (levels(t) - levels(t-1)) + (1 - beta) * trends(t-1);
-        
-        % Update seasonality
         seasonals(mod(t-1, T) + 1) = gamma * (noisy_signal(t) - levels(t)) + ...
                                      (1 - gamma) * seasonals(mod(t-1, T) + 1);
-        
-        % Stability check: Ensure level and trend remain bounded
-        if abs(levels(t)) > 5 * max(noisy_signal)
-            levels(t) = levels(t-1); % Reset to previous value
+        if abs(levels(t)) > bound
+            levels(t) = levels(t-1);
         end
         if abs(trends(t)) > abs(level / T)
-            trends(t) = trends(t-1); % Reset to previous value
+            trends(t) = trends(t-1);
         end
-
-        % Generate predictions
         predictions(t + n_delta_t) = levels(t) + n_delta_t * trends(t) + ...
                          seasonals(mod(t+n_delta_t-1, T) + 1);
     end
-
-    % Fill predictions for the initial period
-    predictions(1:T + n_delta_t) = noisy_signal(1:T + n_delta_t);
+    predictions(1:T + n_delta_t) = noisy_signal(max(1, (1:T + n_delta_t)' - n_delta_t)); % warm-up: simple persistence
 end
