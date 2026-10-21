@@ -38,12 +38,13 @@ function predictions = predict_PAR(noisy_signal, T, n_delta_t, p)
     end
 
     % Generate predictions
-    for t = p + n_delta_t + 1:n_points
+    % Coefficients link each phase to the same phase 1..p cycles earlier: inputs x(t - T), ..., x(t - p*T) (causal for n_delta_t <= T)
+    for t = p * T + 1:n_points
         phase = mod(t - 1, T) + 1; % Determine the phase
-        lagged_values = noisy_signal(t-p:t-1); % Last p values
+        lagged_values = noisy_signal(t - (1:p)' * T); % same phase, 1..p cycles earlier
         predictions(t) = ar_coefficients(phase, :) * lagged_values;
     end
 
-    % Fill initial values with noisy_signal as fallback
-    predictions(1:p + n_delta_t) = noisy_signal(1:p + n_delta_t);
+    % Fill initial values with simple persistence as fallback
+    predictions(1:p * T) = noisy_signal(max(1, (1:p * T)' - n_delta_t));
 end

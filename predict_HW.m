@@ -28,7 +28,7 @@ function predictions = predict_HW(noisy_signal, T, n_delta_t)
     seasonals(1:T) = seasonality;
 
     % Recursive computation
-    for t = T+1:n_points
+    for t = T+1:n_points - n_delta_t
         % Update level
         levels(t) = alpha * (noisy_signal(t) - seasonals(mod(t-1, T) + 1)) + ...
                     (1 - alpha) * (levels(t-1) + trends(t-1));
@@ -49,10 +49,10 @@ function predictions = predict_HW(noisy_signal, T, n_delta_t)
         end
 
         % Generate predictions
-        predictions(t) = levels(t) + n_delta_t * trends(t) + ...
+        predictions(t + n_delta_t) = levels(t) + n_delta_t * trends(t) + ...
                          seasonals(mod(t+n_delta_t-1, T) + 1);
     end
 
     % Fill predictions for the initial period
-    predictions(1:T) = noisy_signal(1:T);
+    predictions(1:T + n_delta_t) = noisy_signal(1:T + n_delta_t);
 end

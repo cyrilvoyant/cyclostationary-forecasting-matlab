@@ -33,31 +33,29 @@ function [mu_t_values, sigma_t_values, rho_t_values, rho_t_h_minus_T_values, rho
     rho_t_plus_h_T_values = zeros(T, 1);
 
     % Calcul des corrélations cycliques
+    % Pairs are taken in the right cycles: a lag that crosses the period boundary
+    % pairs cycle k with cycle k + 1 (or k - 1). Assumes 0 < n_delta_t <= T.
+    pair_corr = @(r1, c1, r2, c2) corr(matrix_form(r1, c1)', matrix_form(r2, c2)');
+    all_c = 1:n_cycles; first_c = 1:n_cycles - 1; next_c = 2:n_cycles;
     for phase = 1:T
-        % Phase avec décalage h
-        phase_plus_delta = mod(phase + n_delta_t - 1, T) + 1;
+        q = phase + n_delta_t; % position of t + h relative to the cycle of t
 
-        % Vérification de la validité des indices
-        if size(matrix_form, 2) > n_delta_t
-            rho_t_values(phase) = corr(matrix_form(phase, :)', matrix_form(phase_plus_delta, :)');
+        % rho(t, t + h)
+        if q <= T
+            rho_t_values(phase) = pair_corr(phase, all_c, q, all_c);
         else
-            rho_t_values(phase) = 0;
+            rho_t_values(phase) = pair_corr(phase, first_c, q - T, next_c);
         end
 
-        % Phase avec décalage h - T
-        phase_h_minus_T = mod(phase + n_delta_t - T - 1, T) + 1;
-        if size(matrix_form, 2) > abs(n_delta_t - T)
-            rho_t_h_minus_T_values(phase) = corr(matrix_form(phase, :)', matrix_form(phase_h_minus_T, :)');
+        % rho(t, t + h - T)
+        if q - T >= 1
+            rho_t_h_minus_T_values(phase) = pair_corr(phase, all_c, q - T, all_c);
         else
-            rho_t_h_minus_T_values(phase) = 0;
+            rho_t_h_minus_T_values(phase) = pair_corr(phase, next_c, q, first_c);
         end
 
-        % Phase avec décalage h + T
-        phase_plus_h_T = mod(phase + n_delta_t + T - 1, T) + 1;
-        if size(matrix_form, 2) > abs(n_delta_t + T)
-            rho_t_plus_h_T_values(phase) = corr(matrix_form(phase_plus_delta, :)', matrix_form(phase_plus_h_T, :)');
-        else
-            rho_t_plus_h_T_values(phase) = 0;
-        end
+        % rho(t + h, t + h - T): lag-T correlation at the target phase
+        q_phase = mod(q - 1, T) + 1;
+        rho_t_plus_h_T_values(phase) = pair_corr(q_phase, next_c, q_phase, first_c);
     end
 end

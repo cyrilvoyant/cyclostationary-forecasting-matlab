@@ -44,6 +44,7 @@ predictions_P_smart = predict_P_smart(noisy_signal, signal, n_delta_t);
 predictions_HW = predict_HW(noisy_signal, T, n_delta_t);
 predictions_Theta = predict_Theta(noisy_signal, T, n_delta_t);
 predictions_PAR = predict_PAR(noisy_signal, T, n_delta_t,p);
+[predictions_P_BLEND_LS, lambda_LS] = predict_P_BLEND_LS(noisy_signal, T, n_delta_t);
 
 % Gestion des valeurs négatives pour les prédictions
 predictions_P = max(0, predictions_P);
@@ -58,10 +59,11 @@ predictions_P_BLEND_Tilde = max(0, predictions_P_BLEND_Tilde);
 predictions_HW = max(0, predictions_HW);
 predictions_Theta = max(0, predictions_Theta);
 predictions_PAR = max(0, predictions_PAR);
+predictions_P_BLEND_LS = max(0, predictions_P_BLEND_LS);
 
 % Calculer nRMSE pour chaque modèle
 start_index = max([T+1, n_delta_t+1]);
-nrmse = zeros(11, 1); % Pré-allocation pour stocker les nRMSE
+nrmse = zeros(12, 1); % Pré-allocation pour stocker les nRMSE
 
 % Calculer la VALEUR MOYENNE du signal bruité sur la plage considérée
 mean_noisy_signal = mean(noisy_signal(start_index:end));
@@ -84,6 +86,7 @@ nrmse(8) = sqrt(mean((noisy_signal(start_index:end) - predictions_P_BLEND_Tilde(
 nrmse(9) = sqrt(mean((noisy_signal(start_index:end) - predictions_HW(start_index:end)).^2)) / mean_noisy_signal;
 nrmse(10) = sqrt(mean((noisy_signal(start_index:end) - predictions_Theta(start_index:end)).^2)) / mean_noisy_signal;
 nrmse(11) = sqrt(mean((noisy_signal(start_index:end) - predictions_PAR(start_index:end)).^2)) / mean_noisy_signal;
+nrmse(12) = sqrt(mean((noisy_signal(start_index:end) - predictions_P_BLEND_LS(start_index:end)).^2)) / mean_noisy_signal;
 
 
 % Afficher les résultats (AFFICHAGE UNIQUE)
@@ -99,6 +102,7 @@ fprintf('nRMSE pour BLEND_Tilde: %.4f\n', nrmse(8));
 fprintf('nRMSE pour HW: %.4f\n', nrmse(9));
 fprintf('nRMSE pour Theta: %.4f\n', nrmse(10));
 fprintf('nRMSE pour PAR: %.4f\n', nrmse(11));
+fprintf('nRMSE pour BLEND_LS: %.4f\n', nrmse(12));
 
 % Définition des indices pour afficher 4 périodes
 n_periods_to_display = 3;
@@ -176,7 +180,7 @@ subtightplot(4, 2, 7, [vertical_margin, 0.05]);
 bar(nrmse, 'FaceColor', cmap(6, :));
 xticklabels({'$P$', '$P^{\circ}$', '$P_S$', '$P_{Cliper}$', ...
              '$P^{\circ}_{Cliper}$', ...
-             '$P_{Blend}$', '$P^{\circ}_{Blend}$', '$\tilde{P}^{\circ}_{Blend}$','$HW$','$Theta$','$PAR$'});
+             '$P_{Blend}$', '$P^{\circ}_{Blend}$', '$\tilde{P}^{\circ}_{Blend}$','$HW$','$Theta$','$PAR$','$P^{LS}_{Blend}$'});
 title('nRMSE Comparison Between Models', 'FontSize', 12, 'FontWeight', 'bold');
 ylabel('nRMSE', 'FontSize', 11);
 grid on;

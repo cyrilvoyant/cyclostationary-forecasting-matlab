@@ -35,8 +35,8 @@ authors:
     given-names: Zaher Mundher
     affiliation: "King Fahd University of Petroleum and Minerals"
     country: SA
-version: 1.0.0
-date-released: "2026-02-21"
+version: 1.1.0
+date-released: "2026-10-21"
 license: MIT
 repository-code: "https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab"
 url: "https://arxiv.org/abs/2602.18949"

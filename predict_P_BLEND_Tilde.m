@@ -19,7 +19,9 @@ function [predictions, lambda_values] = predict_P_BLEND_Tilde(signal, T, n_delta
     [mu_t_values, sigma_t_values, rho_t_values, rho_t_h_minus_T_values, rho_t_plus_h_T_values] = cyclic_parameters(signal, T, n_delta_t);
 
     % Boucle pour générer les prédictions
-    for t = 1:n_points
+    % Causal alignment: parameters at origin t, forecast of t + n_delta_t stored at t + n_delta_t
+    predictions(1:min(n_delta_t, n_points)) = signal(1:min(n_delta_t, n_points));
+    for t = 1:n_points - n_delta_t
         % Déterminer les phases actuelles et futures
         phase = mod(t - 1, T) + 1;
         phase_h = mod(t + n_delta_t - 1, T) + 1;
@@ -39,20 +41,21 @@ function [predictions, lambda_values] = predict_P_BLEND_Tilde(signal, T, n_delta
         % Contrainte pour garder lambda entre [0, 1]
         lambda = max(0, min(1, lambda));
 
-        % Gestion des NaN
+        % Gestion des NaN (variance nulle à l'origine : pas d'information récente -> terme cyclique)
         if isnan(lambda)
-            lambda = 1; % Défaut à 1 en cas de NaN
+            lambda = 1;
         end
 
         % Stocker la valeur de lambda
-        lambda_values(t) = lambda;
+        lambda_values(t + n_delta_t) = lambda;
 
         % Prédiction basée sur la combinaison Blend
-        if t > T + n_delta_t
-            predictions(t) = (1 - lambda) * signal(t - T + n_delta_t) + lambda * signal(t);
+        if t + n_delta_t > T
+            % lambda weights the cyclic term (eq. 16)
+            predictions(t + n_delta_t) = lambda * signal(t + n_delta_t - T) + (1 - lambda) * signal(t);
         else
             % Fallback pour les premières valeurs
-            predictions(t) = signal(t);
+            predictions(t + n_delta_t) = signal(t);
         end
     end
 end

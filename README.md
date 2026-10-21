@@ -5,7 +5,9 @@
 🔗 **Project page:** [https://www.cyrilvoyant.com/...](https://www.cyrilvoyant.com/latest-publications-and-news)
 
 > **A new, frugal persistence operator that exploits the cyclostationarity of energy processes**  
-> Training-free, closed-form, MSE-optimal — companion code for the peer-reviewed publication in *Applied Mathematical Modelling*
+> Closed-form, MSE-optimal, no iterative training — companion code for the peer-reviewed publication in *Applied Mathematical Modelling*
+
+> **v1.1.0 (October 2026) — causal alignment and λ fix.** Earlier versions leaked the target into some forecasts. See [What changed in v1.1.0](#-what-changed-in-v110) and the full results table below.
 
 [![MATLAB](https://img.shields.io/badge/MATLAB-R2021a%2B-blue.svg)](https://www.mathworks.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -33,11 +35,18 @@ Time series from energy systems — **solar irradiance**, **wind speed**, **elec
 - **Simple Persistence** `P` — current observation as forecast
 - **Cyclic Persistence** `P⟲` — phase-aligned observation from the previous cycle
 
-The blending coefficient is derived analytically from MSE minimization:
+The weight of the cyclic term is the MSE-optimal value for each phase of the cycle, written with the cyclic means, standard deviations and correlations (`P⟲_BLEND`). The same weight is obtained directly by a one-line least-squares fit per phase (`P^LS_BLEND`). The simplified coefficient `λ̃ = (1 + ρ)/2` (`P̃⟲_BLEND`) is kept as an approximation; it only helps at the shortest horizons.
 
-$$\tilde{\lambda}(t, \tau) = \frac{1}{2}\left(1 + \rho(t, \tau)\right)$$
+---
 
-where `ρ(t,τ)` is the **local phase-dependent correlation** between current and future observations. This formulation preserves **periodic variance and covariance** — a property no classical stationary model can guarantee.
+## 🔧 What changed in v1.1.0
+
+- **Causal alignment.** In v1.0.0, `predict_P_BLEND_Tilde.m`, `predict_P_BLEND_Cyclo.m`, `predict_HW.m` and `predict_Theta.m` stored the forecast of `t + h` at index `t` while using `x(t)`, so the score compared the forecast with an already known value. Forecasts are now stored at `t + h`. Theta uses a trailing (causal) moving average.
+- **BLEND weight.** λ now weights the cyclic term `x(t + h − T)`, as in the paper's eq. 16. In `P⟲_BLEND` it is the MSE-optimal weight `E[(y − r)(c − r)] / E[(c − r)²]` (`y = x(t+h)`, `r = x(t)`, `c = x(t+h−T)`).
+- **Cyclic correlations.** `cyclic_parameters.m` now pairs the right cycles when a lag crosses the period; in v1.0.0 the lag-T correlation was identically 1.
+- **PAR.** Inputs are `x(t − T), …, x(t − pT)`, consistent with how the coefficients are fitted.
+- **New operator.** `predict_P_BLEND_LS.m`: one least-squares weight per phase, closed form, clipped to [0, 1].
+- The results published in the paper come from a separate pipeline and are not affected by this repository's indexing.
 
 ---
 
@@ -58,8 +67,9 @@ cyclostationary-forecasting-matlab/
 ├── predict_P_CLIPER_Tilde.m    # CLIPER — simplified cyclostationary
 │
 ├── predict_P_BLEND_Statio.m    # BLEND — stationary assumption
-├── predict_P_BLEND_Cyclo.m     # BLEND — full cyclostationary (P⟲_BLEND)
-├── predict_P_BLEND_Tilde.m     # ⭐ BLEND — simplified (P̃⟲_BLEND) KEY CONTRIBUTION
+├── predict_P_BLEND_Cyclo.m     # ⭐ BLEND — cyclostationary, MSE-optimal weight (P⟲_BLEND)
+├── predict_P_BLEND_LS.m        # ⭐ BLEND — least-squares weight per phase (same result)
+├── predict_P_BLEND_Tilde.m     # BLEND — simplified λ̃ = (1+ρ)/2 (short horizons only)
 │
 ├── predict_HW.m                # Holt-Winters benchmark
 ├── predict_Theta.m             # Theta method benchmark
@@ -92,7 +102,9 @@ The script will:
 2. Compute cyclic parameters (mean, std, correlation) per phase
 3. Run all forecasting operators
 4. Compute nRMSE for each model
-5. Produce Figure 3 from the paper (cyclic parameters + model comparison)
+5. Plot the cyclic parameters and the model comparison (synthetic case, `n_delta_t = 1`)
+
+![Synthetic case, v1.1.0, rng(1)](figure3_synthetic.png)
 
 ---
 
@@ -107,8 +119,9 @@ The script will:
 | `predict_P_CLIPER_Cyclo.m` | P⟲_CLIPER | O(nT) | O(T) | Cyclostationary CLIPER |
 | `predict_P_CLIPER_Tilde.m` | P̃⟲_CLIPER | O(nT) | O(T) | Simplified CLIPER |
 | `predict_P_BLEND_Statio.m` | P_BLEND | O(n) | O(1) | Stationary BLEND |
-| `predict_P_BLEND_Cyclo.m` | P⟲_BLEND | O(nT) | O(T) | Cyclostationary BLEND |
-| `predict_P_BLEND_Tilde.m` | **P̃⟲_BLEND** | **O(nT)** | **O(T)** | **⭐ Key contribution** |
+| `predict_P_BLEND_Cyclo.m` | **P⟲_BLEND** | **O(nT)** | **O(T)** | **⭐ MSE-optimal weight per phase** |
+| `predict_P_BLEND_LS.m` | **P^LS_BLEND** | **O(n)** | **O(T)** | **⭐ Least-squares weight per phase** |
+| `predict_P_BLEND_Tilde.m` | P̃⟲_BLEND | O(nT) | O(T) | Simplified weight (1+ρ)/2 |
 | `predict_HW.m` | HW | O(n) | O(h) | Holt-Winters |
 | `predict_Theta.m` | Theta | O(nk) | O(h) | Theta method |
 | `predict_PAR.m` | PAR | O(np²T) | O(pT) | Periodic AR |
@@ -117,22 +130,23 @@ The script will:
 
 ## 🔑 Key Mathematical Contribution
 
-### The Simplified BLEND Operator (P̃⟲_BLEND)
+### The BLEND operator
 
-The forecast is a convex combination of simple and cyclic persistence:
+The forecast is a convex combination of cyclic and simple persistence, with one weight per phase `k` of the cycle:
 
-$$\hat{I}_k(t + n\Delta t) = (1 - \tilde{\lambda}_k)\, I(t - T + n\Delta t) + \tilde{\lambda}_k\, I(t)$$
+$$\hat{I}(t + h) = \lambda_k\, I(t + h - T) + (1 - \lambda_k)\, I(t)$$
 
-with the **analytical blending coefficient**:
+The MSE-optimal weight (`P⟲_BLEND`) is
 
-$$\tilde{\lambda}_k = \frac{1}{2}\left(1 + \rho_k(t,\, n\Delta t)\right)$$
+$$\lambda_k = \frac{\mathbb{E}[(y - r)(c - r)]}{\mathbb{E}[(c - r)^2]}, \quad y = I(t+h),\; r = I(t),\; c = I(t+h-T)$$
+
+expanded with the cyclic means, standard deviations and correlations of phases `t` and `t + h`. Fitting the same ratio on past data (`P^LS_BLEND`) is a one-line least-squares regression per phase. The simplified weight `λ̃ = (1 + ρ)/2` assumes equal means and variances at `t` and `t + h`, which fails on a solar cycle beyond one or two steps.
 
 **Properties:**
-- ✅ **Training-free** — no parameter fitting, no external data
-- ✅ **Preserves periodic variance and covariance** by construction
-- ✅ **Physically interpretable** — high correlation → relies on current observation; low correlation → relies on periodic recurrence
+- ✅ **No iterative training, no external data** — cyclic statistics or a closed-form 1-D fit per phase
+- ✅ **Adapts to the horizon** — the weight moves to the cyclic term when the phase means of `t` and `t + h` differ
 - ✅ **Computationally minimal** — O(T) forecasting complexity
-- ✅ **MSE-optimal** under quasi-stationary symmetry assumptions
+- ✅ **No clear-sky model required**
 
 ---
 
@@ -165,16 +179,29 @@ The paper validates these operators on the **SIAR network** — 68 meteorologica
 
 ## 📉 Results Summary
 
-On synthetic cyclostationary signals:
+On the synthetic signal of `main.m` (`rng(1)`, same scoring window for every model), nRMSE in v1.1.0:
 
-| Horizon | Best models |
-|---|---|
-| 1h | **P̃⟲_BLEND**, P⟲_BLEND (statistically significant, p ≪ 0.05) |
-| 3h | P̃⟲_BLEND, P⟲_BLEND (no significant difference, p = 0.86) |
-| 6h | Pˢ (Smart Persistence) |
-| 9h | P_CLIPER |
+| Operator | h = 1 | h = 2 | h = 3 | h = 6 | h = 9 |
+|---|---|---|---|---|---|
+| P | 0.476 | 0.854 | 1.191 | 1.919 | 2.240 |
+| P⟲ | 0.502 | 0.502 | 0.502 | 0.502 | 0.502 |
+| Pˢ (clear-sky input) | **0.262** | **0.390** | 0.479 | 0.588 | 0.606 |
+| P_CLIPER | 0.468 | 0.804 | 1.053 | 1.272 | 1.272 |
+| P⟲_CLIPER | 0.352 | 0.391 | 0.511 | 1.097 | 0.928 |
+| P_BLEND | 0.366 | 0.457 | 0.484 | 0.498 | 0.499 |
+| **P⟲_BLEND** | 0.299 | 0.395 | **0.444** | **0.488** | **0.495** |
+| **P^LS_BLEND** | 0.299 | 0.395 | **0.444** | **0.488** | **0.495** |
+| P̃⟲_BLEND | 0.472 | 0.497 | 0.576 | 0.762 | 0.597 |
+| HW | 0.715 | 0.769 | 0.816 | 0.911 | 0.943 |
+| Theta | 0.343 | 0.538 | 0.723 | 1.125 | 1.302 |
+| PAR | 0.496 | 0.496 | 0.496 | 0.496 | 0.496 |
 
-On SIAR empirical solar irradiance data:
+- `P⟲_BLEND` and `P^LS_BLEND` coincide (moment form and least-squares form of the same weight). They beat cyclic persistence at every horizon and smart persistence from h = 3, without a clear-sky model.
+- Fitted on the first half and scored on the second, `P^LS_BLEND` gives 0.303 / 0.399 / 0.451 / 0.496 / 0.503: no overfitting.
+- `P̃⟲_BLEND` beats cyclic persistence only at h ≤ 2.
+- The v1.0.0 values for `P̃⟲_BLEND` (0.129 at h = 1) and `P⟲_BLEND` came from the indexing leak described above.
+
+On SIAR empirical solar irradiance data, as reported in the paper (separate pipeline):
 - **EL** (Extreme Learning Machine) achieves lowest nRMSE overall
 - **P̃⟲_BLEND** offers the best accuracy/complexity trade-off **without any external input** (no clear-sky model required)
 - Cyclostationary variants consistently outperform stationary counterparts at extended horizons
