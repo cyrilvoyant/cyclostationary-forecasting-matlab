@@ -7,7 +7,7 @@
 > **Frugal persistence references for cyclostationary energy series**
 > Closed-form weights, no iterative optimisation — companion code for the article in *Applied Mathematical Modelling* (2026)
 
-> **v1.1.1 (October 2026) — corrected implementation.** v1.0.0 and v1.1.0 contained indexing, weighting and estimation errors (see [What changed](#-what-changed-in-v111)). Use v1.1.1. The benchmark below is out-of-sample and reproducible with `run_benchmark.m`.
+> **v1.1.1 (October 2026) — corrected implementation.** v1.0.0 and v1.1.0 contained indexing, weighting and estimation errors (see [What changed](#-what-changed-in-v111)). Use v1.1.1. The benchmark below is out-of-sample and reproducible with `run_benchmark.m`. Version DOI: [10.5281/zenodo.23534072](https://doi.org/10.5281/zenodo.23534072).
 
 [![MATLAB](https://img.shields.io/badge/MATLAB-R2021a%2B-blue.svg)](https://www.mathworks.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)

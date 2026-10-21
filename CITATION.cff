@@ -79,3 +79,6 @@ identifiers:
   - type: doi
     value: "10.5281/zenodo.18812333"
     description: "Concept DOI (all versions, Zenodo)"
+  - type: doi
+    value: "10.5281/zenodo.23534072"
+    description: "Version DOI of v1.1.1 (Zenodo)"
