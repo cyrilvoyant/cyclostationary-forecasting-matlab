@@ -35,7 +35,7 @@ Time series from energy systems — **solar irradiance**, **wind speed**, **elec
 - **Simple Persistence** `P` — current observation as forecast
 - **Cyclic Persistence** `P⟲` — phase-aligned observation from the previous cycle
 
-The weight of the cyclic term is the MSE-optimal value for each phase of the cycle, written with the cyclic means, standard deviations and correlations (`P⟲_BLEND`). The same weight is obtained directly by a one-line least-squares fit per phase (`P^LS_BLEND`). The simplified coefficient `λ̃ = (1 + ρ)/2` (`P̃⟲_BLEND`) is kept as an approximation; it only helps at the shortest horizons.
+The weight of the cyclic term is the MSE-optimal value for each phase of the cycle, written with the cyclic means, standard deviations and correlations (`P⟲_BLEND`). The same weight is obtained directly by a one-line least-squares fit per phase (`P^LS_BLEND`). The simplified coefficient `λ̃ₖ = (1 + ρₖ)/2` (`P̃⟲_BLEND`) is also computed for each phase, from the local correlation ρₖ; it is kept as an approximation and only helps at the shortest horizons.
 
 ---
 
@@ -69,7 +69,7 @@ cyclostationary-forecasting-matlab/
 ├── predict_P_BLEND_Statio.m    # BLEND — stationary assumption
 ├── predict_P_BLEND_Cyclo.m     # ⭐ BLEND — cyclostationary, MSE-optimal weight (P⟲_BLEND)
 ├── predict_P_BLEND_LS.m        # ⭐ BLEND — least-squares weight per phase (same result)
-├── predict_P_BLEND_Tilde.m     # BLEND — simplified λ̃ = (1+ρ)/2 (short horizons only)
+├── predict_P_BLEND_Tilde.m     # BLEND — simplified weight per phase λ̃ₖ = (1+ρₖ)/2 (short horizons only)
 │
 ├── predict_HW.m                # Holt-Winters benchmark
 ├── predict_Theta.m             # Theta method benchmark
@@ -121,7 +121,7 @@ The script will:
 | `predict_P_BLEND_Statio.m` | P_BLEND | O(n) | O(1) | Stationary BLEND |
 | `predict_P_BLEND_Cyclo.m` | **P⟲_BLEND** | **O(nT)** | **O(T)** | **⭐ MSE-optimal weight per phase** |
 | `predict_P_BLEND_LS.m` | **P^LS_BLEND** | **O(n)** | **O(T)** | **⭐ Least-squares weight per phase** |
-| `predict_P_BLEND_Tilde.m` | P̃⟲_BLEND | O(nT) | O(T) | Simplified weight (1+ρ)/2 |
+| `predict_P_BLEND_Tilde.m` | P̃⟲_BLEND | O(nT) | O(T) | Simplified weight per phase (1+ρₖ)/2 |
 | `predict_HW.m` | HW | O(n) | O(h) | Holt-Winters |
 | `predict_Theta.m` | Theta | O(nk) | O(h) | Theta method |
 | `predict_PAR.m` | PAR | O(np²T) | O(pT) | Periodic AR |
@@ -140,7 +140,7 @@ The MSE-optimal weight (`P⟲_BLEND`) is
 
 $$\lambda_k = \frac{\mathbb{E}[(y - r)(c - r)]}{\mathbb{E}[(c - r)^2]}, \quad y = I(t+h),\; r = I(t),\; c = I(t+h-T)$$
 
-expanded with the cyclic means, standard deviations and correlations of phases `t` and `t + h`. Fitting the same ratio on past data (`P^LS_BLEND`) is a one-line least-squares regression per phase. The simplified weight `λ̃ = (1 + ρ)/2` assumes equal means and variances at `t` and `t + h`, which fails on a solar cycle beyond one or two steps.
+expanded with the cyclic means, standard deviations and correlations of phases `t` and `t + h`. Fitting the same ratio on past data (`P^LS_BLEND`) is a one-line least-squares regression per phase. The simplified weight `λ̃ₖ = (1 + ρₖ)/2`, also one value per phase, assumes equal means and variances at `t` and `t + h`, which fails on a solar cycle beyond one or two steps.
 
 **Properties:**
 - ✅ **No iterative training, no external data** — cyclic statistics or a closed-form 1-D fit per phase
@@ -188,10 +188,10 @@ On the synthetic signal of `main.m` (`rng(1)`, same scoring window for every mod
 | Pˢ (clear-sky input) | **0.262** | **0.390** | 0.479 | 0.588 | 0.606 |
 | P_CLIPER | 0.468 | 0.804 | 1.053 | 1.272 | 1.272 |
 | P⟲_CLIPER | 0.352 | 0.391 | 0.511 | 1.097 | 0.928 |
-| P_BLEND | 0.366 | 0.457 | 0.484 | 0.498 | 0.499 |
-| **P⟲_BLEND** | 0.299 | 0.395 | **0.444** | **0.488** | **0.495** |
+| P_BLEND (stationary, one weight) | 0.366 | 0.457 | 0.484 | 0.498 | 0.499 |
+| **P⟲_BLEND** (optimal, per phase) | 0.299 | 0.395 | **0.444** | **0.488** | **0.495** |
 | **P^LS_BLEND** | 0.299 | 0.395 | **0.444** | **0.488** | **0.495** |
-| P̃⟲_BLEND | 0.472 | 0.497 | 0.576 | 0.762 | 0.597 |
+| P̃⟲_BLEND (simplified, per phase) | 0.472 | 0.497 | 0.576 | 0.762 | 0.597 |
 | HW | 0.715 | 0.769 | 0.816 | 0.911 | 0.943 |
 | Theta | 0.343 | 0.538 | 0.723 | 1.125 | 1.302 |
 | PAR | 0.496 | 0.496 | 0.496 | 0.496 | 0.496 |
