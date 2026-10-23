@@ -25,6 +25,8 @@ Applied Mathematical Modelling — 2026 · [arXiv:2602.18949](https://arxiv.org/
 
 ## 🧭 Overview
 
+Scientific use and machine-readable documentation: [llm.md](llm.md), [documentation descriptor](websemantic.json), [Turtle](ontology/blend-cliper.ttl), [JSON-LD](ontology/blend-cliper.jsonld). These explain target indexing, training boundaries, weight orientation and differences from the printed article; they do not register a runnable WebSemantic adapter.
+
 Solar irradiance, wind speed and electrical load repeat with the day: their mean, variance and correlations depend on the phase of the cycle. This repository implements simple, closed-form reference forecasts that use this cyclostationary structure:
 
 - **BLEND** mixes simple persistence `P = x(t)` and cyclic persistence `P⟲ = x(t + h − T)`:

@@ -1,0 +1,17 @@
+@prefix schema: <https://schema.org/> .
+@prefix unit: <http://qudt.org/vocab/unit/> .
+@prefix cv: <https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab#> .
+cv:software a schema:SoftwareSourceCode ;
+ schema:name "Cyclostationary forecasting: BLEND and CLIPER" ;
+ schema:codeRepository <https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab> ;
+ schema:programmingLanguage "MATLAB" ;
+ schema:citation <https://arxiv.org/abs/2602.18949> ;
+ schema:identifier <https://doi.org/10.5281/zenodo.18812333> ;
+ schema:description "Corrected software documents deviations from the printed article; BLEND and CLIPER use different weight orientations." ;
+ cv:input cv:x, cv:T, cv:h, cv:n_train ; cv:output cv:prediction, cv:lambda .
+cv:x a schema:PropertyValue ; schema:name "Regularly sampled signal" ; schema:description "Physical quantity and unit declared by caller." .
+cv:T a schema:PropertyValue ; schema:name "Samples per cycle" ; schema:minValue 2 .
+cv:h a schema:PropertyValue ; schema:name "Horizon in samples" ; schema:minValue 1 .
+cv:n_train a schema:PropertyValue ; schema:name "Initial training sample count" ; schema:description "Explicit boundary required for out-of-sample evaluation." .
+cv:prediction a schema:PropertyValue ; schema:name "Forecast stored at target index" ; schema:description "Same physical unit as signal." .
+cv:lambda a schema:PropertyValue ; schema:name "Blend weight" ; schema:unitCode unit:UNITLESS ; schema:description "BLEND weights simple persistence; CLIPER weights climatology. Returned BLEND arrays are target-indexed." .

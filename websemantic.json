@@ -1,0 +1,25 @@
+{
+ "schema_version":"blend-cliper-documentation-contract-1",
+ "integration_status":"documentation_only_not_registered_with_websemantic",
+ "software":{"repository":"https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab","source_commit":"d9b5d3fabfabb50365ee1f9ea52850754e2de3d6","runtime":"MATLAB","software_doi":"10.5281/zenodo.18812333","version_doi":"10.5281/zenodo.23534072"},
+ "scientific_authority":"arXiv:2602.18949 Definitions4–8, Remarks6–18; README differences with printed article",
+ "entry_points":{
+  "predict_P_BLEND_Statio.m":["x","T","h","n_train"],
+  "predict_P_BLEND_Cyclo.m":["x","T","h","n_train"],
+  "predict_P_BLEND_LS.m":["x","T","h","n_train"],
+  "predict_P_BLEND_Tilde.m":["x","T","h","n_train"],
+  "predict_P_CLIPER_Statio.m":["x","h","n_train"],
+  "predict_P_CLIPER_Cyclo.m":["x","h","T","n_train"]
+ },
+ "inputs":{
+  "x":{"type":"real_finite_vector","required":true,"unit":"declared_by_caller"},
+  "T":{"type":"integer","minimum":2,"unit":"samples_per_cycle","required_for":"cyclic operators and stationary BLEND"},
+  "h":{"type":"integer","required":true,"minimum":1,"unit":"samples","cyclic_maximum":"T","maximum_exclusive":"length(x)"},
+  "n_train":{"type":"integer","required_for_out_of_sample":true,"code_default":"length(x)","maximum":"length(x)","cyclic_minimum":"3*T","unit":"samples"}
+ },
+ "context_required":["physical_quantity","unit","sampling_interval","cycle_phase_origin","training_boundary","evaluation_targets","missing_data_treatment"],
+ "outputs":{"predictions":{"unit":"same_as_x","indexing":"target t+h"},"lambda_values":{"unit":"http://qudt.org/vocab/unit/UNITLESS","available_from":["predict_P_BLEND_Cyclo","predict_P_BLEND_LS","predict_P_BLEND_Tilde"],"indexing":"target index; weight of simple persistence"}},
+ "constraints":["Maintain regular time grid","Declare n_train to avoid whole-series fitting","Exclude initial fallback predictions from evaluation","h<=T for cyclic recurrence","Different CLIPER argument order; see entry_points"],
+ "scientific_caveats":["BLEND lambda weights simple persistence; CLIPER lambda weights climatology","Moment BLEND differs from printed Eq2; see README","Cyclic CLIPER anchors on target-phase mean rather than printed origin-phase mean","Simplified BLEND requires Remark17 assumptions","Repository benchmark does not reproduce article SIAR experiments"],
+ "validation_scope":"Documentation; not an executable input validation gate"
+}

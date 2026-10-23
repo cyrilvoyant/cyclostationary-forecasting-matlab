@@ -1,0 +1,163 @@
+[
+  {
+    "@id": "https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab#x",
+    "@type": [
+      "https://schema.org/PropertyValue"
+    ],
+    "https://schema.org/description": [
+      {
+        "@value": "Physical quantity and unit declared by caller."
+      }
+    ],
+    "https://schema.org/name": [
+      {
+        "@value": "Regularly sampled signal"
+      }
+    ]
+  },
+  {
+    "@id": "https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab#T",
+    "@type": [
+      "https://schema.org/PropertyValue"
+    ],
+    "https://schema.org/minValue": [
+      {
+        "@type": "http://www.w3.org/2001/XMLSchema#integer",
+        "@value": 2
+      }
+    ],
+    "https://schema.org/name": [
+      {
+        "@value": "Samples per cycle"
+      }
+    ]
+  },
+  {
+    "@id": "https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab#h",
+    "@type": [
+      "https://schema.org/PropertyValue"
+    ],
+    "https://schema.org/minValue": [
+      {
+        "@type": "http://www.w3.org/2001/XMLSchema#integer",
+        "@value": 1
+      }
+    ],
+    "https://schema.org/name": [
+      {
+        "@value": "Horizon in samples"
+      }
+    ]
+  },
+  {
+    "@id": "https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab#software",
+    "@type": [
+      "https://schema.org/SoftwareSourceCode"
+    ],
+    "https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab#input": [
+      {
+        "@id": "https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab#x"
+      },
+      {
+        "@id": "https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab#T"
+      },
+      {
+        "@id": "https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab#h"
+      },
+      {
+        "@id": "https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab#n_train"
+      }
+    ],
+    "https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab#output": [
+      {
+        "@id": "https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab#prediction"
+      },
+      {
+        "@id": "https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab#lambda"
+      }
+    ],
+    "https://schema.org/citation": [
+      {
+        "@id": "https://arxiv.org/abs/2602.18949"
+      }
+    ],
+    "https://schema.org/codeRepository": [
+      {
+        "@id": "https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab"
+      }
+    ],
+    "https://schema.org/description": [
+      {
+        "@value": "Corrected software documents deviations from the printed article; BLEND and CLIPER use different weight orientations."
+      }
+    ],
+    "https://schema.org/identifier": [
+      {
+        "@id": "https://doi.org/10.5281/zenodo.18812333"
+      }
+    ],
+    "https://schema.org/name": [
+      {
+        "@value": "Cyclostationary forecasting: BLEND and CLIPER"
+      }
+    ],
+    "https://schema.org/programmingLanguage": [
+      {
+        "@value": "MATLAB"
+      }
+    ]
+  },
+  {
+    "@id": "https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab#prediction",
+    "@type": [
+      "https://schema.org/PropertyValue"
+    ],
+    "https://schema.org/description": [
+      {
+        "@value": "Same physical unit as signal."
+      }
+    ],
+    "https://schema.org/name": [
+      {
+        "@value": "Forecast stored at target index"
+      }
+    ]
+  },
+  {
+    "@id": "https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab#n_train",
+    "@type": [
+      "https://schema.org/PropertyValue"
+    ],
+    "https://schema.org/description": [
+      {
+        "@value": "Explicit boundary required for out-of-sample evaluation."
+      }
+    ],
+    "https://schema.org/name": [
+      {
+        "@value": "Initial training sample count"
+      }
+    ]
+  },
+  {
+    "@id": "https://github.com/cyrilvoyant/cyclostationary-forecasting-matlab#lambda",
+    "@type": [
+      "https://schema.org/PropertyValue"
+    ],
+    "https://schema.org/description": [
+      {
+        "@value": "BLEND weights simple persistence; CLIPER weights climatology. Returned BLEND arrays are target-indexed."
+      }
+    ],
+    "https://schema.org/name": [
+      {
+        "@value": "Blend weight"
+      }
+    ],
+    "https://schema.org/unitCode": [
+      {
+        "@id": "http://qudt.org/vocab/unit/UNITLESS"
+      }
+    ]
+  }
+]
